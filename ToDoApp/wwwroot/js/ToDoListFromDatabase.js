@@ -82,25 +82,26 @@ function Update(url) {
     console.log(url);
     swal({
         title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover",
+        text: "Once finished, you will not be able to recover",
         icon: "warning",
         buttons: true,
         dangerMode: true
     }).then((willUpdate) => {
-        console.log(url);
-        $.ajax({
-            type: "POST",
-            url: url,
-            success: function (data) {
-                if (data.success) {
-                    toastr.success(data.message);
-                    location.reload();
-                }
-                else {
-                    toastr.error(data.message)
-                }
+        if (willUpdate) {
+            $.ajax({
+                type: "POST",
+                url: url,
+                success: function (data) {
+                    if (data.success) {
+                        toastr.success(data.message);
+                        location.reload();
+                    }
+                    else {
+                        toastr.error(data.message)
+                    }
 
-            }
-        });
+                }
+            });
+        }
     });
 }

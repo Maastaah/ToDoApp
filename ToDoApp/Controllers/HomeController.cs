@@ -64,7 +64,7 @@ namespace ToDoApp.Controllers
 
             toDoFromDb.IsDone = true;
             await _db.SaveChangesAsync();
-            return Json(new { success = true, message = "Delete successful" });
+            return Json(new { success = true, message = "Update successful" });
         }
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
