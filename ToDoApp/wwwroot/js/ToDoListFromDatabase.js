@@ -7,7 +7,7 @@
 function loadData() {
     $.ajax({
         type: 'GET',
-        url: 'home/getall',
+        url: 'home/getByUser',
         dataType: 'json',
         success: function (data) {
             data.data.sort(function (a, b) {

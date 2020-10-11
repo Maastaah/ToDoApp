@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using ToDoApp.Models;
 
@@ -9,8 +11,10 @@ namespace ToDoApp.Controllers
 {
     public class HomeController : Controller
     {
+
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
+
         [BindProperty]
         public ToDoModel ToDo { get; set; }
 
@@ -20,12 +24,13 @@ namespace ToDoApp.Controllers
             _db = db;
         }
 
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
@@ -36,11 +41,17 @@ namespace ToDoApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
         #region API Calls
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Json(new { data = await _db.ToDo.ToListAsync() });
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetByUser()
+        {
+            return Json(new { data = await _db.ToDo.Where(b => b.User == User.Identity.Name).ToListAsync() });
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -48,6 +59,7 @@ namespace ToDoApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                ToDo.User = User.Identity.Name;
                 _db.ToDo.Add(ToDo);
                 _db.SaveChanges();
             }
@@ -73,7 +85,7 @@ namespace ToDoApp.Controllers
 
             if (toDoFromDb == null)
             {
-                return Json(new { success = false, message = "Error while Deleting" });
+                return Json(new { success = false, message = "Error while deleting" });
             }
             _db.ToDo.Remove(toDoFromDb);
             await _db.SaveChangesAsync();
