@@ -14,14 +14,16 @@ namespace ToDoApp.Controllers
 
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _db;
+        private readonly IToDoRepository _toDoRepository;
 
         [BindProperty]
         public ToDoModel ToDo { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IToDoRepository toDoRepository)
         {
             _logger = logger;
             _db = db;
+            _toDoRepository = toDoRepository;
         }
 
         [AllowAnonymous]
