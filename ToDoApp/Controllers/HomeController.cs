@@ -6,9 +6,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ToDoApp.Models;
-
+using ToDoApp.ViewModels;
 namespace ToDoApp.Controllers
 {
+
     public class HomeController : Controller
     {
 
@@ -29,7 +30,12 @@ namespace ToDoApp.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            return View();
+            var results = _toDoRepository.AllTodos();
+            ToDoViewModel taskList = new ToDoViewModel
+            {
+                AllTasks = _toDoRepository.TodosByUser(User.Identity.Name)
+            };
+            return View(taskList);
         }
 
         [AllowAnonymous]
@@ -49,24 +55,22 @@ namespace ToDoApp.Controllers
         public async Task<IActionResult> GetAll()
         {
             return Json(new { data = await _db.ToDo.ToListAsync() });
+            //try
+            //{
+            //    return Ok(_toDoRepository.AllTodos());
+            //}
+            //catch(Exception ex)
+            //{
+            //    _logger.LogError($"Failed to get tasks: {ex}");
+            //    return BadRequest("Failed to get tasks");
+            //}
         }
         [HttpGet]
         public async Task<IActionResult> GetByUser()
         {
             return Json(new { data = await _db.ToDo.Where(b => b.User == User.Identity.Name).ToListAsync() });
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create()
-        {
-            if (ModelState.IsValid)
-            {
-                ToDo.User = User.Identity.Name;
-                _db.ToDo.Add(ToDo);
-                _db.SaveChanges();
-            }
-            return RedirectToAction("Index");
-        }
+
         [HttpPost]
         public async Task<IActionResult> Update(int id)
         {

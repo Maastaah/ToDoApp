@@ -1,4 +1,4 @@
-﻿@model ToDoApp.Models.ToDoModel
+﻿@model ToDoApp.ViewModels.ToDoViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -7,58 +7,17 @@
     <h1 class="display-4">To Do app</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
-
 <div>
-    <h3>Todo's for @User.Identity.Name</h3>
-    <form method="post" asp-controller="Home" asp-action="Create">
-        <div class="text-danger" asp-validation-summary="ModelOnly">
-            <input type="hidden" asp-for="Id" />
-        </div>
-        <div class="form-group row">
-            <div class="col-3">
-                <label asp-for="Task"></label>
-            </div>
-            <div class="col-6">
-                <input asp-for="Task" class="form-control" />
-                <span asp-validation-for="Task" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-3">
-                <label asp-for="Deadline"></label>
-            </div>
-            <div class="col-6">
-                <input asp-for="Deadline" class="form-control" />
-                <span asp-validation-for="Deadline" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="form-group row">
-            <div class="col-3 offset-3">
-                <button type="submit" class="btn btn-primary form-control">
-                    Create
-                </button>
-            </div>
-        </div>
-    </form>
+    <h3>Create task:</h3>
+    <partial name="~/Views/Forms/_CreateToDoForm.cshtml" />
 </div>
 <div>
-    <h3>List of endless tasks</h3>
-    <div class="row" id="endlessTasklist">
-    </div>
-    <h3>List of unfinished tasks</h3>
-    <div class="row" id="unfinishedTasklist">
-    </div>
-    <div>
-        <ul class="list-group" id="todolist">
-        </ul>
-    </div>
-    <h3>List of finished tasks</h3>
-    <div class="row" id="finishedTasklist">
-    </div>
-    <div>
-        <ul class="list-group" id="todolist">
-        </ul>
-    </div>
+    <h3>Todo's for @User.Identity.Name</h3>
+</div>
+
+
+<div>
+    <partial name="~/Views/Tasks/_TaskList.cshtml" />
 </div>
 @section Scripts
     {

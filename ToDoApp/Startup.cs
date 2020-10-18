@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,12 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using System.Reflection;
+using System.Text;
 using ToDoApp.Models;
 
 namespace ToDoApp
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,8 +33,21 @@ namespace ToDoApp
             {
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddAuthentication()
+        .AddCookie()
+        .AddJwtBearer(cfg =>
+        {
+            cfg.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidIssuer = Configuration["Tokens:Issuer"],
+                ValidAudience = Configuration["Tokens:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+            };
+
+        });
             services.AddControllersWithViews();
             services.AddScoped<IToDoRepository, ToDoRepository>();
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMvc(options =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -54,9 +72,9 @@ namespace ToDoApp
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

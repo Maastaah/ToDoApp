@@ -1,0 +1,49 @@
+﻿@model ToDoApp.ViewModels.ToDoViewModel
+
+<div>
+    <h3>List of endless tasks</h3>
+    <div class="row" id="endlessTasklist">
+        @foreach (var todo in Model.AllTasks)
+        {
+            if (todo.Deadline < DateTime.Now)
+            {
+                <div class="col-11 m-0 p-0">
+                    <div class="alert alert-success">@todo.Task</div>
+                </div>
+                <div class="col-1 m-0 p-0">
+                    <div class="alert alert-success" id="done" onclick=Update('/home/Update?id ='+${item.id})><i class="fas fa-check"></i></div>
+                </div>
+            }
+        }
+    </div>
+    <h3>List of unfinished tasks</h3>
+    <div class="row" id="unfinishedTasklist">
+        @foreach (var todo in Model.AllTasks)
+        {
+            if (todo.IsDone == false && todo.Deadline > DateTime.Now)
+            {
+                <div class="col-11 m-0 p-0">
+                    <div class="alert alert-primary">@todo.Task @todo.Deadline</div>
+                </div>
+                <div class="col-1 m-0 p-0">
+                    <div class="alert alert-success" id="done" onclick=Update('/home/Update?id ='+${item.id})><i class="fas fa-check"></i></div>
+                </div>
+            }
+        }
+    </div>
+    <h3>List of finished tasks</h3>
+    <div class="row" id="finishedTasklist">
+        @foreach (var todo in Model.AllTasks)
+        {
+            if (todo.IsDone == true)
+            {
+                <div class="col-11 m-0 p-0">
+                    <div class="alert alert-secondary"><del>@todo.Task @todo.Deadline</del></div>
+                </div>
+                <div class="col-1 m-0 p-0">
+                    <div class="alert alert-secondary" id="notDone"><i class="fas fa-check"></i></div>
+                </div>
+            }
+        }
+    </div>
+</div>

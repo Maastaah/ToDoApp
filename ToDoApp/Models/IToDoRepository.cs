@@ -4,13 +4,12 @@ namespace ToDoApp.Models
 {
     public interface IToDoRepository
     {
-        ToDoModel GetAll();
-        IEnumerable<ToDoModel> AllTodos { get; }
+        IEnumerable<ToDoModel> AllTodos();
         IEnumerable<ToDoModel> TodosByUser(string user);
-        ToDoModel GetByUser();
-        ToDoModel Create();
-        ToDoModel Update(int id);
-        ToDoModel Delete(int id);
+
+
+        void AddEntity(object model);
+        bool SaveAll();
 
     }
 }
