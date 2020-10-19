@@ -8,10 +8,10 @@
             if (todo.Deadline < DateTime.Now)
             {
                 <div class="col-11 m-0 p-0">
-                    <div class="alert alert-success">@todo.Task</div>
+                    <div class="alert alert-success">@todo.Task @todo.Deadline.ToString()</div>
                 </div>
                 <div class="col-1 m-0 p-0">
-                    <div class="alert alert-success" id="done" onclick=Update('/home/Update?id ='+${item.id})><i class="fas fa-check"></i></div>
+                    <div class="alert alert-success" id="done"><i class="fas fa-check"></i></div>
                 </div>
             }
         }
@@ -23,10 +23,10 @@
             if (todo.IsDone == false && todo.Deadline > DateTime.Now)
             {
                 <div class="col-11 m-0 p-0">
-                    <div class="alert alert-primary">@todo.Task @todo.Deadline</div>
+                    <div class="alert alert-primary">@todo.Task @todo.Deadline.ToString()</div>
                 </div>
                 <div class="col-1 m-0 p-0">
-                    <div class="alert alert-success" id="done" onclick=Update('/home/Update?id ='+${item.id})><i class="fas fa-check"></i></div>
+                    <div class="alert alert-success" id="done"><i class="fas fa-check"></i></div>
                 </div>
             }
         }
@@ -38,12 +38,24 @@
             if (todo.IsDone == true)
             {
                 <div class="col-11 m-0 p-0">
-                    <div class="alert alert-secondary"><del>@todo.Task @todo.Deadline</del></div>
+                    <div class="alert alert-secondary"><del>@todo.Task @todo.Deadline.ToString()</del></div>
                 </div>
                 <div class="col-1 m-0 p-0">
                     <div class="alert alert-secondary" id="notDone"><i class="fas fa-check"></i></div>
                 </div>
             }
+        }
+    </div>
+    <h3>All tasks</h3>
+    <div class="row" id="finishedTasklist">
+        @foreach (var todo in Model.AllTasks)
+        {
+            <div class="col-11 m-0 p-0">
+                <div class="alert alert-secondary">@todo.Task @todo.Deadline.ToString()</div>
+            </div>
+            <div class="col-1 m-0 p-0">
+                <div class="alert alert-secondary" id="notDone"><i class="fas fa-check"></i></div>
+            </div>
         }
     </div>
 </div>

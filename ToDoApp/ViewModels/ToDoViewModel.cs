@@ -9,7 +9,7 @@ namespace ToDoApp.ViewModels
     {
         public IEnumerable<ToDoModel> AllTasks { get; set; }
         public int TaskId { get; set; }
-        public DateTime? TaskDeadline { get; set; }
+        public DateTime? Deadline { get; set; }
         [Required]
         public string Task { get; set; }
         public string User { get; set; }

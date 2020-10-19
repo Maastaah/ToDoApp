@@ -1,8 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace ToDoApp.Models
 {
@@ -45,7 +46,10 @@ namespace ToDoApp.Models
                 return null;
             }
         }
-
+        public async Task<IActionResult> EditTodo(int id)
+        {
+            var todo = await _db.ToDo.FirstOrDefaultAsync(p => p.Id == id);
+        }
         public void AddEntity(object model)
         {
             _db.Add(model);

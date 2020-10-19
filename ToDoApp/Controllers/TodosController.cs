@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,7 +13,6 @@ namespace ToDoApp.Controllers
     [Route("api/[Controller]")]
     [ApiController]
     [Produces("application/json")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class TodosController : Controller
     {
         private readonly IToDoRepository _toDoRepository;
@@ -91,5 +88,6 @@ namespace ToDoApp.Controllers
             }
             return BadRequest("Failed to save new task");
         }
+
     }
 }
