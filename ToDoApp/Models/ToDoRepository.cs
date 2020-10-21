@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ToDoApp.Models
 {
@@ -46,9 +44,35 @@ namespace ToDoApp.Models
                 return null;
             }
         }
-        public async Task<IActionResult> EditTodo(int id)
+        public ToDoModel GetTodoById(string username, int id)
         {
-            var todo = await _db.ToDo.FirstOrDefaultAsync(p => p.Id == id);
+            try
+            {
+                _logger.LogInformation("TodosByUser was called");
+                return _db.ToDo.FirstOrDefault(p => p.Id == id && p.User == username);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to todo by id: {ex}");
+                return null;
+            }
+        }
+        public void Update(object model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException($"{nameof(Update)} entity must not be null");
+            }
+            try
+            {
+                _db.Update(model);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception($"{nameof(model)} could not be saved: {ex.Message}");
+            }
         }
         public void AddEntity(object model)
         {

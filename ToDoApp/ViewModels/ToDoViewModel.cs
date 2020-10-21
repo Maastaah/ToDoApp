@@ -13,6 +13,7 @@ namespace ToDoApp.ViewModels
         [Required]
         public string Task { get; set; }
         public string User { get; set; }
+        public string Notes { get; set; }
 
     }
 }

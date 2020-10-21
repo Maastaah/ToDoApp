@@ -8,11 +8,6 @@ using ToDoApp.ViewModels;
 
 namespace ToDoApp.Controllers
 {
-
-
-    [Route("api/[Controller]")]
-    [ApiController]
-    [Produces("application/json")]
     public class TodosController : Controller
     {
         private readonly IToDoRepository _toDoRepository;
@@ -57,6 +52,49 @@ namespace ToDoApp.Controllers
                 return BadRequest("Failed to get tasks");
             }
         }
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            try
+            {
+                var results = _toDoRepository.GetTodoById(User.Identity.Name, id);
+                return new JsonResult(results);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult EditTodo([FromForm] ToDoViewModel toDo)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var updatedTodo = _mapper.Map<ToDoViewModel, ToDoModel>(toDo);
+                    _toDoRepository.Update(updatedTodo);
+                    if (_toDoRepository.SaveAll())
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        return BadRequest(ModelState);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError($"Failed to update task {ex}");
+            }
+
+            return BadRequest("Failed to update task");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create([FromForm] ToDoViewModel toDo)
@@ -71,7 +109,6 @@ namespace ToDoApp.Controllers
                     _toDoRepository.AddEntity(newTask);
                     if (_toDoRepository.SaveAll())
                     {
-                        //return Created($"/api/todos/{newTask.Id}", _mapper.Map<ToDoModel, ToDoViewModel>(newTask));
                         return RedirectToAction("Index", "Home");
                     }
                 }

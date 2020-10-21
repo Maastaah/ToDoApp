@@ -1,0 +1,34 @@
+﻿@model ToDoApp.ViewModels.ToDoViewModel
+
+<div class="modal fade" id="editTodo">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit task</h4>
+            </div>
+            <div class="modal-body">
+                <form action="Edit">
+                    <div class="form-group">
+                        <label asp-for="Task"></label>
+                        <input asp-for="Task" class="form-control" id="task" />
+                        <span asp-validation-for="Task" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Deadline"></label>
+                        <input asp-for="Deadline" class="form-control" id="deadline" />
+                        <span asp-validation-for="Deadline" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Notes"></label>
+                        <input asp-for="Notes" class="form-control" id="notes" />
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-save="modal">Update</button>
+            </div>
+        </div>
+    </div>
+</div>

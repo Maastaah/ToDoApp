@@ -1,8 +1,49 @@
 ﻿$(document).ready(function () {
-    loadData();
- 
-    //loadDataTable();
+    editModal();
+    modalUpdate();
 });
+
+function editModal() {
+    $("#Edit").on("click", function () {
+        var id = $(this).attr("data-id");
+        console.log(id);
+        $.ajax({
+            type: 'GET',
+            url: '/Todos/Edit/' + id,
+            success: function (task) {
+                $('#task').val(task.task);
+                $('#deadline').val(task.deadline);
+                $('#notes').val(task.notes);
+            }
+        });
+    });
+}
+function modalUpdate() {
+    $("button[data-save='modal']").on("click", function () {
+        var form = $('form');
+        var toke = $('input[name="__RequestVerificationToken"]', form).val();
+        $.ajax({
+            type: 'POST',
+            url: '/Todos/EditTodo/' + data,
+            data: {
+                __RequestVerificationToken: token,
+                position: {
+                    PositionName: $("#PositionName").val()
+                }
+            },
+            success: function (data) {
+                if (data.success == true) {
+                    console.log("lähetetty data: " + data);
+                    $('#Edit').modal('hide');
+                    location.reload(false)
+                } else {
+                    console.log("failed data: " + data);
+                    $('#Edit').html(data);
+                }
+            }
+        })
+    });
+}
 
 function loadData() {
     $.ajax({
@@ -66,34 +107,6 @@ function Delete(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);   
-                        location.reload();
-                    }
-                    else {
-                        toastr.error(data.message)
-                    }
-
-                }
-            });
-        }
-    });
-}
-
-function Update(url) {
-    console.log(url);
-    swal({
-        title: "Are you sure?",
-        text: "Once finished, you will not be able to recover",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true
-    }).then((willUpdate) => {
-        if (willUpdate) {
-            $.ajax({
-                type: "POST",
-                url: url,
-                success: function (data) {
-                    if (data.success) {
-                        toastr.success(data.message);
                         location.reload();
                     }
                     else {

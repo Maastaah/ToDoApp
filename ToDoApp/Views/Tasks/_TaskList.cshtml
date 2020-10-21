@@ -7,8 +7,11 @@
         {
             if (todo.Deadline < DateTime.Now)
             {
-                <div class="col-11 m-0 p-0">
+                <div class="col-9 m-0 p-0">
                     <div class="alert alert-success">@todo.Task @todo.Deadline.ToString()</div>
+                </div>
+                <div class="col-2 m-0 p-0">
+                    <button asp-controller="Todos" asp-action="Edit" asp-route-id="@todo.Id" data-id="@todo.Id" data-toggle="modal" data-target="#editTodo" id="Edit">Edit</button>
                 </div>
                 <div class="col-1 m-0 p-0">
                     <div class="alert alert-success" id="done"><i class="fas fa-check"></i></div>

@@ -10,6 +10,7 @@ namespace ToDoApp.Models
         public string User { get; set; }
         [Required]
         public string Task { get; set; }
+        public string Notes { get; set; }
         public bool IsDone { get; set; }
         public DateTime? Deadline { get; set; }
 
