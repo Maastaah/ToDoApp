@@ -20,18 +20,18 @@ function editModal() {
 }
 function modalUpdate() {
     $("button[data-save='modal']").on("click", function () {
-        var form = $('form');
-        var toke = $('input[name="__RequestVerificationToken"]', form).val();
+        var data = $('form').serialize();
+
+        console.log(data);
         $.ajax({
             type: 'POST',
-            url: '/Todos/EditTodo/' + data,
-            data: {
-                __RequestVerificationToken: token,
-                position: {
-                    PositionName: $("#PositionName").val()
-                }
-            },
+            url: '/Todos/EditTodo/',
+            data: data,
+            dataType: 'json',
+            header: ("RequestVerificationToken", document.getElementById('RequestVerificationToken').value),
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',  
             success: function (data) {
+                console.log(data);
                 if (data.success == true) {
                     console.log("lähetetty data: " + data);
                     $('#Edit').modal('hide');
@@ -44,7 +44,11 @@ function modalUpdate() {
         })
     });
 }
-
+function gettoken() {
+    var token = '@Html.AntiForgeryToken()';
+    token = $(token).val();
+    return token;
+}
 function loadData() {
     $.ajax({
         type: 'GET',

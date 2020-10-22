@@ -68,21 +68,20 @@ namespace ToDoApp.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult EditTodo([FromForm] ToDoViewModel toDo)
+        public IActionResult EditTodo(ToDoViewModel toDo)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var updatedTodo = _mapper.Map<ToDoViewModel, ToDoModel>(toDo);
-                    _toDoRepository.Update(updatedTodo);
+                    _toDoRepository.Update(toDo);
                     if (_toDoRepository.SaveAll())
                     {
-                        return RedirectToAction("Index", "Home");
+                        return Json(new { success = true, message = "Success while updating" });
                     }
                     else
                     {
-                        return BadRequest(ModelState);
+                        return Json(new { success = false, message = "Error while updating" });
                     }
                 }
             }

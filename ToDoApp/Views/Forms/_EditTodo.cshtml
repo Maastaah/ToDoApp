@@ -1,5 +1,14 @@
 ﻿@model ToDoApp.ViewModels.ToDoViewModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@functions{
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
+}
 
+<input type="hidden" id="RequestVerificationToken"
+       name="RequestVerificationToken" value="@GetAntiXsrfRequestToken()">
 <div class="modal fade" id="editTodo">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -7,20 +16,20 @@
                 <h4 class="modal-title">Edit task</h4>
             </div>
             <div class="modal-body">
-                <form action="Edit">
+                <form action="Edit" id="editForm">
                     <div class="form-group">
                         <label asp-for="Task"></label>
-                        <input asp-for="Task" class="form-control" id="task" />
+                        <input asp-for="Task" class="form-control" id="task" name="Task" />
                         <span asp-validation-for="Task" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Deadline"></label>
-                        <input asp-for="Deadline" class="form-control" id="deadline" />
+                        <input asp-for="Deadline" class="form-control" id="deadline" name="Deadline" />
                         <span asp-validation-for="Deadline" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Notes"></label>
-                        <input asp-for="Notes" class="form-control" id="notes" />
+                        <input asp-for="Notes" class="form-control" id="notes" name="Notes" />
                         <span asp-validation-for="Notes" class="text-danger"></span>
                     </div>
                 </form>
