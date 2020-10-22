@@ -1,6 +1,5 @@
 ﻿$(document).ready(function () {
-    editModal();
-    modalUpdate();
+
 });
 
 function editModal() {
@@ -18,6 +17,8 @@ function editModal() {
         });
     });
 }
+
+
 function modalUpdate() {
     $("button[data-save='modal']").on("click", function () {
         var data = $('form').serialize();
@@ -26,10 +27,7 @@ function modalUpdate() {
         $.ajax({
             type: 'POST',
             url: '/Todos/EditTodo/',
-            data: data,
-            dataType: 'json',
-            header: ("RequestVerificationToken", document.getElementById('RequestVerificationToken').value),
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',  
+            data: JSON.stringify(data), 
             success: function (data) {
                 console.log(data);
                 if (data.success == true) {

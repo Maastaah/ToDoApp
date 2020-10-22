@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using ToDoApp.Models;
 using ToDoApp.ViewModels;
+using static ToDoApp.Helper;
 
 namespace ToDoApp.Controllers
 {
@@ -52,51 +55,49 @@ namespace ToDoApp.Controllers
                 return BadRequest("Failed to get tasks");
             }
         }
-        [HttpGet]
-        public IActionResult Edit(int id)
-        {
-            try
-            {
-                var results = _toDoRepository.GetTodoById(User.Identity.Name, id);
-                return new JsonResult(results);
-            }
-            catch (Exception ex)
-            {
 
-                throw;
-            }
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult EditTodo(ToDoViewModel toDo)
+        [NoDirectAccess]
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            try
+            if (id == 0)
+                return View("/Views/Tasks/AddOrEdit.cshtml", new ToDoViewModel());
+            else
             {
-                if (ModelState.IsValid)
+                var todoModel = await _toDoRepository.GetTodoById(User.Identity.Name, id);
+                var updatedTodo = _mapper.Map<ToDoModel, ToDoViewModel>(todoModel);
+                if (todoModel == null)
                 {
-                    _toDoRepository.Update(toDo);
-                    if (_toDoRepository.SaveAll())
-                    {
-                        return Json(new { success = true, message = "Success while updating" });
-                    }
-                    else
-                    {
-                        return Json(new { success = false, message = "Error while updating" });
-                    }
+                    return NotFound();
                 }
+                return View("/Views/Tasks/AddOrEdit.cshtml", updatedTodo);
             }
-            catch (Exception ex)
-            {
-
-                _logger.LogError($"Failed to update task {ex}");
-            }
-
-            return BadRequest("Failed to update task");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([FromForm] ToDoViewModel toDo)
+        public async Task<IActionResult> AddOrEdit([Bind("TaskId,Task,Deadline,Notes")] ToDoViewModel todoModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var updatedTodo = _mapper.Map<ToDoViewModel, ToDoModel>(todoModel);
+                //Update
+                try
+                {
+                    updatedTodo.User = User.Identity.Name;
+                    _toDoRepository.Update(updatedTodo);
+                    await _toDoRepository.SaveAll();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    _logger.LogError("DB probleem");
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            return Json(new { isValid = false, html = Helper.RenderRazorViewToString(this, "AddOrEdit", todoModel) });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([FromForm] ToDoViewModel toDo)
         {
             try
             {
@@ -106,7 +107,7 @@ namespace ToDoApp.Controllers
 
                     newTask.User = User.Identity.Name;
                     _toDoRepository.AddEntity(newTask);
-                    if (_toDoRepository.SaveAll())
+                    if (await _toDoRepository.SaveAll())
                     {
                         return RedirectToAction("Index", "Home");
                     }
@@ -124,6 +125,5 @@ namespace ToDoApp.Controllers
             }
             return BadRequest("Failed to save new task");
         }
-
     }
 }

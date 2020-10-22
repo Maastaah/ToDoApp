@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ToDoApp.Models
 {
@@ -44,12 +46,12 @@ namespace ToDoApp.Models
                 return null;
             }
         }
-        public ToDoModel GetTodoById(string username, int id)
+        public async Task<ToDoModel> GetTodoById(string username, int id)
         {
             try
             {
-                _logger.LogInformation("TodosByUser was called");
-                return _db.ToDo.FirstOrDefault(p => p.Id == id && p.User == username);
+                _logger.LogInformation("TodoById was called");
+                return await _db.ToDo.FirstOrDefaultAsync(p => p.Id == id && p.User == username);
 
             }
             catch (Exception ex)
@@ -78,9 +80,11 @@ namespace ToDoApp.Models
         {
             _db.Add(model);
         }
-        public bool SaveAll()
+        public async Task<bool> SaveAll()
         {
-            return _db.SaveChanges() > 0;
+            return await _db.SaveChangesAsync() > 0;
         }
+
     }
+
 }

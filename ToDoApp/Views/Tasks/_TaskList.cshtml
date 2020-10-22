@@ -2,16 +2,22 @@
 
 <div>
     <h3>List of endless tasks</h3>
-    <div class="row" id="endlessTasklist">
-        @foreach (var todo in Model.AllTasks)
+    <div class="row" ">
+        @foreach (var item in Model.AllTasks)
         {
-            if (todo.Deadline < DateTime.Now)
+            if (item.Deadline < DateTime.Now)
             {
                 <div class="col-9 m-0 p-0">
-                    <div class="alert alert-success">@todo.Task @todo.Deadline.ToString()</div>
+                    <div class="alert alert-success">@item.Task @item.Deadline.ToString()</div>
                 </div>
                 <div class="col-2 m-0 p-0">
-                    <button asp-controller="Todos" asp-action="Edit" asp-route-id="@todo.Id" data-id="@todo.Id" data-toggle="modal" data-target="#editTodo" id="Edit">Edit</button>
+                    <div>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Todos",new {id=item.Id},Context.Request.Scheme)','Update Task')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                            <input type="hidden" asp-for="@item.Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </div>
                 </div>
                 <div class="col-1 m-0 p-0">
                     <div class="alert alert-success" id="done"><i class="fas fa-check"></i></div>
@@ -20,28 +26,47 @@
         }
     </div>
     <h3>List of unfinished tasks</h3>
-    <div class="row" id="unfinishedTasklist">
-        @foreach (var todo in Model.AllTasks)
+    <div class="row" ">
+        @foreach (var item in Model.AllTasks)
         {
-            if (todo.IsDone == false && todo.Deadline > DateTime.Now)
+            if (item.IsDone == false && item.Deadline > DateTime.Now)
             {
-                <div class="col-11 m-0 p-0">
-                    <div class="alert alert-primary">@todo.Task @todo.Deadline.ToString()</div>
+                <div class="col-9 m-0 p-0">
+                    <div class="alert alert-primary">@item.Task @item.Deadline.ToString()</div>
+                </div>
+                <div class="col-2 m-0 p-0">
+                    <div>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Todo",new {id=item.Id},Context.Request.Scheme)','Update Task')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                            <input type="hidden" asp-for="@item.Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </div>
                 </div>
                 <div class="col-1 m-0 p-0">
                     <div class="alert alert-success" id="done"><i class="fas fa-check"></i></div>
                 </div>
+
             }
         }
     </div>
     <h3>List of finished tasks</h3>
     <div class="row" id="finishedTasklist">
-        @foreach (var todo in Model.AllTasks)
+        @foreach (var item in Model.AllTasks)
         {
-            if (todo.IsDone == true)
+            if (item.IsDone == true)
             {
-                <div class="col-11 m-0 p-0">
-                    <div class="alert alert-secondary"><del>@todo.Task @todo.Deadline.ToString()</del></div>
+                <div class="col-9 m-0 p-0">
+                    <div class="alert alert-secondary"><del>@item.Task @item.Deadline.ToString()</del></div>
+                </div>
+                <div class="col-2 m-0 p-0">
+                    <div>
+                        <a onclick="showInPopup('@Url.Action("AddOrEdit","Todo",new {id=item.Id},Context.Request.Scheme)','Update Task')" class="btn btn-info text-white"><i class="fas fa-pencil-alt"></i> Edit</a>
+                        <form asp-action="Delete" asp-route-id="@item.Id" onsubmit="return jQueryAjaxDelete(this)" class="d-inline">
+                            <input type="hidden" asp-for="@item.Id" />
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                        </form>
+                    </div>
                 </div>
                 <div class="col-1 m-0 p-0">
                     <div class="alert alert-secondary" id="notDone"><i class="fas fa-check"></i></div>
@@ -51,10 +76,10 @@
     </div>
     <h3>All tasks</h3>
     <div class="row" id="finishedTasklist">
-        @foreach (var todo in Model.AllTasks)
+        @foreach (var item in Model.AllTasks)
         {
-            <div class="col-11 m-0 p-0">
-                <div class="alert alert-secondary">@todo.Task @todo.Deadline.ToString()</div>
+            <div class="col-9 m-0 p-0">
+                <div class="alert alert-secondary">@item.Task @item.Deadline.ToString()</div>
             </div>
             <div class="col-1 m-0 p-0">
                 <div class="alert alert-secondary" id="notDone"><i class="fas fa-check"></i></div>
