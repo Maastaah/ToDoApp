@@ -125,5 +125,29 @@ namespace ToDoApp.Controllers
             }
             return BadRequest("Failed to save new task");
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Update(int id)
+        {
+            try
+            {
+                var task = await _toDoRepository.GetTodoById(User.Identity.Name, id);
+                task.IsDone = true;
+
+                _toDoRepository.Update(task);
+                if (await _toDoRepository.SaveAll())
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                return BadRequest(ModelState);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError($"Failed to update task {ex}");
+            }
+            return BadRequest("Failed to save new task");
+        }
     }
 }

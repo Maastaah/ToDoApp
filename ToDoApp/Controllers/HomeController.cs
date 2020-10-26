@@ -14,9 +14,6 @@ namespace ToDoApp.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IToDoRepository _toDoRepository;
 
-        [BindProperty]
-        public ToDoModel ToDo { get; set; }
-
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext db, IToDoRepository toDoRepository)
         {
             _logger = logger;
@@ -27,7 +24,6 @@ namespace ToDoApp.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            var results = _toDoRepository.AllTodos();
             ToDoViewModel taskList = new ToDoViewModel
             {
                 AllTasks = _toDoRepository.TodosByUser(User.Identity.Name)
