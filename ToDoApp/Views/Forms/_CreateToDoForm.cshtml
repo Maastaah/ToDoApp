@@ -1,6 +1,6 @@
 ﻿@model ToDoApp.ViewModels.ToDoViewModel
 
-<form method="post" asp-controller="Todos" asp-action="Create">
+<form id="createForm" method="post" asp-controller="Todos" asp-action="Create" data-ajax="true" data-ajax-update="#createForm" data-ajax-mode="replace">
     <div class="text-danger" asp-validation-summary="ModelOnly">
         <input type="hidden" asp-for="TaskId" />
     </div>

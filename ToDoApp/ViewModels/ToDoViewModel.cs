@@ -9,6 +9,7 @@ namespace ToDoApp.ViewModels
     {
         public IEnumerable<ToDoModel> AllTasks { get; set; }
         public int TaskId { get; set; }
+        [ValidateDateRange]
         public DateTime? Deadline { get; set; }
         [Required]
         public string Task { get; set; }

@@ -114,7 +114,7 @@ namespace ToDoApp.Controllers
                 }
                 else
                 {
-                    return BadRequest(ModelState);
+                    return View("Views/Forms/_CreateToDoForm.cshtml", toDo);
                 }
 
             }

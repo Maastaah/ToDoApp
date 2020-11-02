@@ -12,6 +12,7 @@ namespace ToDoApp.Models
         public string Task { get; set; }
         public string Notes { get; set; }
         public bool IsDone { get; set; }
+        [ValidateDateRange]
         public DateTime? Deadline { get; set; }
 
     }
