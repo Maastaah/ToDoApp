@@ -19,13 +19,10 @@ function timer(deadline, e) {
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        var display = days + " Days " + hours + " Hours " + minutes + " Minutes "+ seconds + " Seconds";
-        $(e).html(display);
-        //console.log("distance: " + distance);
-        //console.log("days: " + days);
-        //console.log("hours: " + hours);
-        //console.log("minutes " + minutes);
-        //console.log("seconds " + seconds);
+        var display = days + " Days " + hours + " Hours " + minutes + " Minutes " + seconds + " Seconds";
+        if (distance >= 0) {
+            $(e).html(display);
+        }
     }, 1000)
 }
 

@@ -6,13 +6,13 @@ namespace ToDoApp.Models
 {
     public class ValidateDateRangeAttribute : ValidationAttribute
     {
-        public string GetErrorMessage() => $"Date must be beyond {DateTime.Now}.";
+        public string GetErrorMessage() => $"Date must be beyond {DateTime.UtcNow}.";
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var task = (ToDoViewModel)validationContext.ObjectInstance;
 
-            if (task.Deadline < DateTime.Now)
+            if (task.Deadline < DateTime.UtcNow)
             {
                 return new ValidationResult(GetErrorMessage());
             }

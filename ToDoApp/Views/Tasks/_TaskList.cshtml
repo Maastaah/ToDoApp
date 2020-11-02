@@ -42,10 +42,15 @@
     @foreach (var item in Model.AllTasks)
     {
 
-        @if (item.IsDone == false && item.Deadline > DateTime.Now)
+        @if (item.IsDone == false && item.Deadline != null)
         {
+            var color = "bg-primary";
+            @if (item.Deadline < DateTime.Now)
+            {
+                color = "bg-danger";
+            }
             var parsedDeadline = Convert(item.Deadline);
-            <div class="row bg-primary p-2 m-2">
+            <div class="row @color p-2 m-2">
                 <div class="col-3">
                     @item.Task
                 </div>
@@ -82,7 +87,8 @@
 
     }
     <h3>List of finished tasks</h3>
-    @foreach (var item in Model.AllTasks)
+
+    @foreach (var item in Model.AllTasks.Take(10))
     {
         if (item.IsDone == true)
         {
