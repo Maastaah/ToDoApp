@@ -1,14 +1,15 @@
-﻿using ToDoApp.Controllers;
+﻿using Moq;
+using System.Threading.Tasks;
+using ToDoApp.Models;
 
 namespace ToDoApp.tests.Controller
 {
     class ToDoAppControllerTests
     {
-        private readonly HomeController _controller;
-
-        public ToDoAppControllerTests()
+        public async Task Index_ReturnsAViewResult_WithTodos()
         {
-            //_controller = new HomeController();
+            var mockRepo = new Mock<IToDoRepository>();
+
         }
     }
 }

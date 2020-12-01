@@ -118,7 +118,7 @@ namespace ToDoApp.Controllers
                           _config["Tokens:Issuer"],
                           _config["Tokens:Audience"],
                           claims,
-                          expires: DateTime.Now.AddMinutes(30),
+                          expires: DateTime.UtcNow.AddMinutes(30),
                           signingCredentials: creds);
 
                         var results = new

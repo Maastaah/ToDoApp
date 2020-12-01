@@ -4,18 +4,25 @@ using ToDoApp.ViewModels;
 
 namespace ToDoApp.Models
 {
-    public class ValidateDateRangeAttribute : ValidationAttribute
+    public sealed class ValidateDateRangeAttribute : ValidationAttribute
     {
-        public string GetErrorMessage() => $"Date must be beyond {DateTime.UtcNow}.";
+        public static string GetErrorMessage() => $"Date must be beyond {DateTime.UtcNow}.";
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+
             var task = (ToDoViewModel)validationContext.ObjectInstance;
 
-            if (task.Deadline < DateTime.UtcNow)
+            if (task.Deadline.HasValue)
             {
-                return new ValidationResult(GetErrorMessage());
+                DateTime convert = (DateTime)task.Deadline;
+                DateTime convertedDeadline = DateTime.SpecifyKind(convert, DateTimeKind.Utc);
+                if (convertedDeadline < DateTime.UtcNow)
+                {
+                    return new ValidationResult(GetErrorMessage());
+                }
             }
+
             return ValidationResult.Success;
         }
     }

@@ -8,9 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
-using System.Text;
 using ToDoApp.Models;
 
 namespace ToDoApp
@@ -33,18 +31,7 @@ namespace ToDoApp
             {
                 options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddAuthentication()
-        .AddCookie()
-        .AddJwtBearer(cfg =>
-        {
-            cfg.TokenValidationParameters = new TokenValidationParameters()
-            {
-                ValidIssuer = Configuration["Tokens:Issuer"],
-                ValidAudience = Configuration["Tokens:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
-            };
-
-        });
+            services.AddAuthentication();
             services.AddControllersWithViews();
             services.AddScoped<IToDoRepository, ToDoRepository>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());

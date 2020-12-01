@@ -11,6 +11,5 @@ namespace ToDoApp.Models
         }
 
         public DbSet<ToDoModel> ToDo { get; set; }
-        public DbSet<TestModel> Test { get; set; }
     }
 }
